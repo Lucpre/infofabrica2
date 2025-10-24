@@ -1,0 +1,20 @@
+{
+  "Diretor Autocrata": {
+    "descricao": "Bônus com BB, Pênalti com Gen Z.",
+    "habilidade_nome": "Ordem Direta",
+    "habilidade_custo": 1,
+    "habilidade_requer_alvo": true
+  },
+  "Visionário Transformacional": {
+    "descricao": "Bônus com Millennial.",
+    "habilidade_nome": "Discurso Inspirador",
+    "habilidade_custo": 2,
+    "habilidade_requer_alvo": false
+  },
+  "Líder Servidor": {
+    "descricao": "Estresse da equipe sobe devagar.",
+    "habilidade_nome": "Remover Obstáculos",
+    "habilidade_custo": 1,
+    "habilidade_requer_alvo": true
+  }
+}

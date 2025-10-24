@@ -1,0 +1,622 @@
+[
+  {
+    "dia": "Segunda-feira",
+    "gatilho": "Padrão",
+    "frase": "Bom dia... quer dizer, 'dia', né? Mal comecei e a Máquina X já deu 'tela azul'. Tá parada. A meta de hoje já era?",
+    "opcoes": [
+      {
+        "texto": "Não vamos desistir da meta. Chame a manutenção AGORA e siga o POP de contingência. Sem desculpas.",
+        "efeito": "Projeto +1, Determinação +1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Ok, máquina parada. Isso impacta o cliente Y. Vamos seguir o POP de contingência. Me mostre no tablet onde você parou e qual o código de erro.",
+        "efeito": "Respeito +1, Determinação +1, Estresse -1, Projeto +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Que frustrante começar a semana assim. Calma. Foco na segurança primeiro. Sinalize a área. Eu seguro a pressão do PCP, foque em fazer o certo.",
+        "efeito": "Respeito +1, Estresse -1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Resolva isso. Você sabe o que fazer quando a máquina para. Me avise quando voltar.",
+        "efeito": "Respeito -1, Estresse +1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Segunda-feira",
+    "gatilho": "Determinacao Alta",
+    "frase": "A Máquina X parou, mas eu já abri o chamado na manutenção pelo tablet. Enquanto eles não chegam, já estou limpando a esteira e preparando o setup da máquina Y pra adiantar outro pedido.",
+    "opcoes": [
+      {
+        "texto": "Perfeito! Continue gerenciando as duas frentes. Você está no controle. Me atualize se a manutenção demorar mais de 30 minutos.",
+        "efeito": "Respeito +2, Determinação +2, Projeto +1",
+        "tipo": "delegar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Não. Sua prioridade é a X. Assim que a manutenção chegar, pare o que está fazendo na Y e acompanhe eles. Siga o fluxo padrão.",
+        "efeito": "Determinação -1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Mandou bem na proatividade! Só cuidado pra não se sobrecarregar. Me avise se precisar de ajuda quando o Carlos (Manutenção) chegar.",
+        "efeito": "Respeito +1, Determinação +1, Estresse -1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Calma aí. Você tem certeza que pode adiantar a Y? Me explique o passo-a-passo. Não quero que você faça errado e gere outro problema.",
+        "efeito": "Respeito -1, Determinação -1, Estresse +1",
+        "tipo": "orientar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Segunda-feira",
+    "gatilho": "Estresse Alto",
+    "frase": "Parou TUDO! A máquina X travou de novo, tá fazendo um barulho horrível e o painel tá piscando! Tô com medo de mexer. A gente não vai entregar nada hoje!",
+    "opcoes": [
+      {
+        "texto": "Respira. Segurança em primeiro lugar. Se afaste da máquina. Eu já estou chamando a manutenção. Sua segurança é mais importante que a meta.",
+        "efeito": "Respeito +2, Estresse -2, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Ignora o barulho. Tenta reiniciar pelo painel. Não podemos ficar parados. Se quebrar, o Carlos conserta.",
+        "efeito": "Respeito -2, Estresse +2, Projeto -1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Ok, calma. Vamos lá: Aperte a emergência e sinalize a área. Não tente consertar. Eu estou indo aí ver esse barulho junto com você e a manutenção.",
+        "efeito": "Respeito +1, Estresse -1, Determinação +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Você é a operadora, decida o que fazer. Se quebrar mais, a responsabilidade é sua.",
+        "efeito": "Respeito -2, Estresse +2",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Segunda-feira",
+    "gatilho": "Comodismo Alto",
+    "frase": "Ah, a Máquina X parou de novo. Normal de segunda... Já abri o chamado lá no tablet. Vou ficar aqui no celular esperando a manutenção, não dá pra fazer nada mesmo.",
+    "opcoes": [
+      {
+        "texto": "Negativo. Celular guardado. Enquanto espera, você vai fazer o 5S completo da sua área e organizar o ferramental. Não quero ninguém parado.",
+        "efeito": "Projeto +1, Determinação +1, Comodidade -1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Esperar não é a única opção. Vamos aproveitar essa parada. Pega o tablet e vamos revisar juntos o POP dessa máquina. Onde você acha que o processo falha?",
+        "efeito": "Determinação +1, Respeito +1, Comodidade -1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Tudo bem, dá uma descansada. Mas fica de olho pra avisar quando o Carlos chegar.",
+        "efeito": "Comodidade +1, Respeito +1, Estresse -1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Ok, me avise quando eles chegarem.",
+        "efeito": "Comodidade +1, Projeto -1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Terça-feira",
+    "gatilho": "Padrão",
+    "frase": "Cheguei. Ouvi dizer que o lote de matéria-prima de ontem foi reprovado pela qualidade. A gente tem material pra rodar hoje ou vou ficar olhando pro teto?",
+    "opcoes": [
+      {
+        "texto": "Temos um lote de emergência. A meta é X. Foque em produzir sem desperdício, não podemos perder nada desse lote.",
+        "efeito": "Projeto +1, Determinação +1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Sim, foi reprovado. O plano é usar o lote de emergência. Ele se comporta um pouco diferente. Vamos repassar o ajuste de parâmetro juntos no tablet.",
+        "efeito": "Respeito +1, Determinação +1, Estresse -1, Projeto +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "É uma situação chata, eu sei. Não se preocupe, o pessoal da logística já está trazendo o lote reserva. Pode começar o setup padrão.",
+        "efeito": "Respeito +1, Estresse -1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Temos material. Gerencie seu estoque aí e me avise se acabar.",
+        "efeito": "Respeito -1, Estresse +1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Terça-feira",
+    "gatilho": "Determinacao Alta",
+    "frase": "Soube da MP ruim. Já chequei o estoque antigo e achei um saldo daquele lote bom da semana passada. Já separei e tô pronta pra rodar com ele. Não vamos atrasar!",
+    "opcoes": [
+      {
+        "texto": "Excelente! Confio em você. Se o lote está bom e liberado pela qualidade, pode usar. Você tá no comando dessa recuperação.",
+        "efeito": "Respeito +2, Determinação +2, Projeto +1",
+        "tipo": "delegar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Opa, boa ideia. Esse saldo está validado no sistema? Vamos checar juntos a etiqueta de liberação antes de usar, só por segurança.",
+        "efeito": "Respeito +1, Determinação +1, Projeto +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Mandou bem! Mas não quero que você se acostume a resolver os problemas dos outros. Da próxima vez, fale com o PCP.",
+        "efeito": "Respeito -1, Determinação -1, Estresse +1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Não use esse saldo! Use o lote de emergência que foi designado pela logística. Siga o plano.",
+        "efeito": "Determinação -1, Respeito -1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Terça-feira",
+    "gatilho": "Estresse Alto",
+    "frase": "Isso é um absurdo! Como deixam chegar material reprovado? Agora tô com esse lote de 'emergência' que é horrível, a máquina tá travando toda hora! Assim não dá pra bater meta!",
+    "opcoes": [
+      {
+        "texto": "Calma, Júlia. Eu entendo sua frustração. A culpa não é sua. Faça o melhor que der com esse material. Se a produtividade cair, eu assumo a responsabilidade.",
+        "efeito": "Respeito +2, Estresse -2, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Eu sei que esse lote é ruim. Me mostre onde está travando. Qual parâmetro você já tentou ajustar? Vamos tentar reduzir a velocidade.",
+        "efeito": "Respeito +1, Estresse -1, Projeto +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Não quero saber da qualidade do lote. Ajuste a máquina e faça funcionar. A meta é a mesma.",
+        "efeito": "Respeito -2, Estresse +2",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Se vira. A máquina é sua, o lote tá aí. Faça o seu trabalho.",
+        "efeito": "Respeito -2, Estresse +2",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Terça-feira",
+    "gatilho": "Comodismo Alto",
+    "frase": "Ah, o lote principal foi reprovado? Que pena... Bom, então hoje não tem muito o que fazer, né? Vou ficar aqui na limpeza até chegar material novo.",
+    "opcoes": [
+      {
+        "texto": "Nada disso. Tem um lote de emergência na área. Vá buscar e comece a produção imediatamente.",
+        "efeito": "Determinação +1, Comodidade -1, Estresse +1, Projeto +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Na verdade, temos sim. Mas antes de usar, quero que você revise o procedimento de inspeção visual. O que você acha que a Qualidade pegou nesse lote ruim?",
+        "efeito": "Determinação +1, Respeito +1, Comodidade -1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Ah, que bom que você vai limpar. Faça um 5S completo aí.",
+        "efeito": "Determinação -1, Comodidade +1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "É... parece que sim. Aproveita pra organizar as coisas.",
+        "efeito": "Comodidade +1, Projeto -1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quarta-feira",
+    "gatilho": "Padrão",
+    "frase": "Pronta pra mais um dia. Vi no tablet que o plano de produção mudou todo. Entrou aquele pedido urgente do Cliente Y, né? Vai ser correria.",
+    "opcoes": [
+      {
+        "texto": "Exato. A prioridade é 100% esse pedido. Setup rápido e foco total. Não podemos errar.",
+        "efeito": "Projeto +1, Determinação +1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Sim, mudou tudo. Esse cliente é estratégico. Como essa mudança afeta seu setup? Vamos repassar o novo plano juntos.",
+        "efeito": "Respeito +1, Determinação +1, Projeto +1, Estresse -1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Vai ser correria mesmo. Eu sei que é ruim mudar o plano em cima da hora. Vou garantir que você tenha todo o material na mão.",
+        "efeito": "Respeito +1, Estresse -1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "É esse pedido mesmo. Você sabe da importância dele. Toque aí e me avise quando finalizar.",
+        "efeito": "Respeito -1, Estresse +1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quarta-feira",
+    "gatilho": "Determinacao Alta",
+    "frase": "Vi o pedido urgente do Cliente Y! Já baixei o novo POP, separei a ferramenta e tô só esperando a MP. Se tudo correr bem, entrego antes do almoço!",
+    "opcoes": [
+      {
+        "texto": "Perfeito, Júlia. Você sabe o que fazer. O pedido é seu. Me grite só se a MP não chegar em 15 minutos.",
+        "efeito": "Respeito +2, Determinação +2, Projeto +1",
+        "tipo": "delegar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "É desse espírito que precisamos! Muito bom ver você abraçando o desafio. Manda bala!",
+        "efeito": "Respeito +1, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Ótimo. Quero que entregue antes das 11h. Foco total. Não quero erros.",
+        "efeito": "Projeto +1, Determinação +1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Show! Só repassa comigo passo a passo: qual o primeiro passo do POP? E o segundo? Quero ter certeza que você leu.",
+        "efeito": "Respeito -1, Determinação -1, Estresse +1",
+        "tipo": "orientar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quarta-feira",
+    "gatilho": "Estresse Alto",
+    "frase": "De novo isso? O comercial joga um pedido urgente e eu que me vire? Eu já tava no meio do setup da outra peça! É impossível trabalhar com esse 'planejamento'!",
+    "opcoes": [
+      {
+        "texto": "Respira. Eu sei que é um saco e também fico frustrado. Mas preciso da sua ajuda pra salvar esse cliente. Vamos focar só nele, e eu blindo você de qualquer outra cobrança.",
+        "efeito": "Respeito +2, Estresse -2, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Eu entendo a frustração de parar no meio. Vamos fazer assim: 5 minutos pra você guardar o ferramental atual com segurança, e então eu te ajudo a começar o novo setup.",
+        "efeito": "Respeito +1, Estresse -1, Determinação +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Não discuta o planejamento. Desfaça o setup atual e comece o urgente. Agora.",
+        "efeito": "Respeito -2, Estresse +2, Determinação -1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Eu sou pago pra gerenciar, você pra operar. Resolva.",
+        "efeito": "Respeito -2, Estresse +2",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quarta-feira",
+    "gatilho": "Comodismo Alto",
+    "frase": "Ah, entrou pedido urgente? Sério? Bem na quarta... Eu tava planejando fazer aquela limpeza nos sensores hoje. Esse pedido vai levar o dia todo, que preguiça...",
+    "opcoes": [
+      {
+        "texto": "A limpeza dos sensores fica pra semana que vem. Sua única prioridade hoje é esse pedido. Comece o setup.",
+        "efeito": "Determinação +1, Comodidade -1, Estresse +1, Projeto +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Esse pedido é crucial. Eu preciso que você mude sua programação. O que você precisa pra fazer esse setup o mais rápido possível?",
+        "efeito": "Determinação +1, Comodidade -1, Projeto +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Eu sei que quebra o ritmo, mas é o que tem pra hoje. Força aí.",
+        "efeito": "Determinação -1, Comodidade -1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Veja aí o que dá pra fazer e me avise.",
+        "efeito": "Comodidade +1, Projeto -1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quinta-feira",
+    "gatilho": "Padrão",
+    "frase": "Bom dia. Fiquei sabendo que tem auditoria de segurança na área hoje. O pessoal já tá naquela correria pra arrumar as coisas. Espero que não me atrasem.",
+    "opcoes": [
+      {
+        "texto": "Sua obrigação é estar com a área 100% em ordem sempre. Siga o POP à risca. O auditor não pode achar nada fora do lugar aí.",
+        "efeito": "Determinação +1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Não é pra 'arrumar', é pra 'estar'. Vamos checar juntos: EPIs ok? POP no tablet ok? Quero que você explique o processo pra ele com confiança.",
+        "efeito": "Respeito +1, Determinação +1, Estresse -1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Sei que auditoria deixa todo mundo tenso. Não se preocupe com 'teatro'. Apenas trabalhe como você faz todo dia. Se o auditor apontar algo, anote e me traga.",
+        "efeito": "Respeito +1, Estresse -1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Você sabe seus procedimentos. Confio que sua área estará em ordem. Responda o que ele perguntar.",
+        "efeito": "Respeito -1, Estresse +1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quinta-feira",
+    "gatilho": "Determinacao Alta",
+    "frase": "Auditoria? Pode mandar! Minha área tá um brinco, o POP tá aberto no tablet e os EPIs tão todos aqui. Se ele perguntar, vou até sugerir aquela melhoria de segurança que comentei.",
+    "opcoes": [
+      {
+        "texto": "Perfeito. Você é a referência da área. Receba o auditor e me chame só se tiver algum problema.",
+        "efeito": "Respeito +2, Determinação +2",
+        "tipo": "delegar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Excelente! Sobre a sua sugestão, vamos revisar ela aqui rapidinho antes de você falar com ele, pra termos certeza dos argumentos.",
+        "efeito": "Respeito +1, Determinação +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Que orgulho! É muito bom saber que posso ficar tranquilo quanto à sua área.",
+        "efeito": "Respeito +1, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Não sugira nada. Apenas responda o que for perguntado e siga o script.",
+        "efeito": "Determinação -1, Respeito -1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quinta-feira",
+    "gatilho": "Estresse Alto",
+    "frase": "Auditoria surpresa? Mas o POP que tá no tablet é o antigo! E o sensor de segurança da máquina tá falhando desde ontem! Se ele me pegar, a culpa vai ser minha?",
+    "opcoes": [
+      {
+        "texto": "Calma. De jeito nenhum a culpa é sua. Eu estou ciente do sensor e vou comunicar o auditor pessoalmente. Eu te dou cobertura.",
+        "efeito": "Respeito +2, Estresse -2, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Não, a culpa não é sua. Me mostre esse sensor. Vamos parar a máquina AGORA e abrir um chamado crítico. É melhor o auditor ver a máquina parada por segurança.",
+        "efeito": "Respeito +1, Estresse -1, Determinação +1, Projeto -1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "A culpa é de quem opera. Dê um jeito. Reinicie a máquina e use o POP antigo mesmo.",
+        "efeito": "Respeito -2, Estresse +2",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Seja sincera com ele e arque com as consequências.",
+        "efeito": "Respeito -2, Estresse +2",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Quinta-feira",
+    "gatilho": "Comodismo Alto",
+    "frase": "Ah, hoje é o 'dia do teatro'? Todo mundo correndo pra fingir que segue as regras... Vou só fazer meu trabalho aqui quietinha, fingindo que nem notei o auditor.",
+    "opcoes": [
+      {
+        "texto": "Eu não quero teatro, Júlia. Eu quero segurança real. O que você acha que é 'teatro' no nosso processo? Me aponte o que não funciona no dia-a-dia.",
+        "efeito": "Respeito +1, Determinação +1, Comodidade -1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Nada de 'teatro'. Você VAI seguir as regras, hoje e sempre. E quero ver sua área impecável.",
+        "efeito": "Determinação +1, Comodidade -1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Eu entendo seu cinismo, mas essa auditoria é importante. Por favor, só colabore hoje. Mantenha os EPIs e a área limpa.",
+        "efeito": "Determinação +1, Comodidade -1, Respeito -1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Faça o que achar melhor, desde que não me crie problemas.",
+        "efeito": "Comodidade +1, Respeito -1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Sexta-feira",
+    "gatilho": "Padrão",
+    "frase": "Sextou! Ei, eu tava pensando... se a gente mudar a ordem de apertar aqueles dois botões no setup, acho que ganhamos uns segundos. Mas teria que parar pra testar...",
+    "opcoes": [
+      {
+        "texto": "Interessante. Me explica melhor. Qual o risco? Vamos fazer um teste rápido agora, antes de começar o lote. Eu cronometro com você.",
+        "efeito": "Respeito +1, Determinação +1, Projeto +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Opa, gosto de ver essa cabeça pensando! Ótima ideia. Mas como tá a meta? Se a gente parar agora, impacta muito? Vamos avaliar.",
+        "efeito": "Respeito +1, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Sexta-feira não é dia de teste. Anote a ideia e me entregue. Vamos focar em bater a meta da semana.",
+        "efeito": "Determinação -1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Parece bom. Se você acha que funciona e não vai atrasar, pode testar. A responsabilidade é sua.",
+        "efeito": "Respeito +1, Estresse +1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Sexta-feira",
+    "gatilho": "Determinacao Alta",
+    "frase": "Sextou com melhoria! Lembra aquela ideia de mudar a ordem dos botões? Eu cheguei mais cedo e testei. Funciona! Reduz 10 segundos do setup. Posso implementar?",
+    "opcoes": [
+      {
+        "texto": "Fantástico! Você validou a ideia, o ganho é seu. Implemente e me traga os resultados no fim do dia. Confio em você.",
+        "efeito": "Respeito +2, Determinação +2, Projeto +1",
+        "tipo": "delegar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Implemente imediatamente e documente no formulário de Kaizen. Quero ver esse ganho na produção de hoje.",
+        "efeito": "Projeto +1, Determinação +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Uau! Isso é incrível. Me mostre como você fez. Precisamos avisar a segurança e formalizar isso no POP antes de rodar valendo.",
+        "efeito": "Respeito +1, Determinação -1, Estresse +1",
+        "tipo": "orientar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Cara, você é demais! Chegar mais cedo pra testar? Parabéns! Fico feliz que você é tão engajada.",
+        "efeito": "Respeito +1, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Sexta-feira",
+    "gatilho": "Estresse Alto",
+    "frase": "Chefe, eu tive uma ideia, mas... ah, deixa pra lá. É sexta-feira, a meta tá apertada, e se eu tentar e a máquina travar? Melhor não mexer no que tá quieto...",
+    "opcoes": [
+      {
+        "texto": "Não, de jeito nenhum. As melhores ideias vêm com risco. Me conta. O pior que pode acontecer é não dar certo. E se der? Eu assumo o risco do atraso se você quiser testar.",
+        "efeito": "Respeito +2, Estresse -2, Determinação +1",
+        "tipo": "apoiar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Ei, calma. Uma ideia que trava não é uma ideia ruim, é um teste que aprendemos. Me conta. Qual o risco? A gente pode analisar juntos, sem compromisso.",
+        "efeito": "Respeito +1, Estresse -1, Determinação +1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Se a meta tá apertada, esqueça a ideia. Foco na produção.",
+        "efeito": "Determinação -1, Estresse +1",
+        "tipo": "determinar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Se você, que é a operadora, tá com medo, então é melhor não fazer mesmo. Deixa quieto.",
+        "efeito": "Respeito -1, Determinação -1, Comodidade +1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  },
+  {
+    "dia": "Sexta-feira",
+    "gatilho": "Comodismo Alto",
+    "frase": "Sexta-feira... enfim. A máquina tá rodando, a meta tá quase batida. Vou só levar no banho-maria até a hora de ir embora. Nada de inventar moda hoje.",
+    "opcoes": [
+      {
+        "texto": "Banho-maria não. A meta é X. Quero que você termine a meta e comece a adiantar o setup de segunda-feira.",
+        "efeito": "Determinação +1, Comodidade -1, Estresse +1, Projeto +1",
+        "tipo": "determinar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Já que está tranquilo, que tal a gente usar 30 minutos pra discutir aquela sua ideia de melhoria? Como a gente poderia testar ela na segunda?",
+        "efeito": "Determinação +1, Respeito +1, Comodidade -1",
+        "tipo": "orientar",
+        "eficacia": "eficaz"
+      },
+      {
+        "texto": "Tudo bem, você merece um dia mais calmo. Só garanta que a área fique 100% limpa e organizada para o próximo turno.",
+        "efeito": "Respeito +1, Comodidade +1",
+        "tipo": "apoiar",
+        "eficacia": "ineficaz"
+      },
+      {
+        "texto": "Beleza, bom fim de semana. Só não deixe a máquina parar.",
+        "efeito": "Comodidade +1, Projeto -1",
+        "tipo": "delegar",
+        "eficacia": "ineficaz"
+      }
+    ]
+  }
+]

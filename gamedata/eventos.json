@@ -1,0 +1,47 @@
+[
+  {
+    "id_evento": "EV001",
+    "titulo": "Falha Crítica na Máquina X",
+    "desc": "A máquina principal da linha parou inesperadamente. A produção está parada e a meta do dia corre risco.",
+    "op1_txt": "Manutenção Urgente: Foco total em consertar!",
+    "op1_ef": "Estresse +1, Respeito +1",
+    "op2_txt": "Plano B: Remanejar produção e contornar gargalo.",
+    "op2_ef": "Projeto -10, Comodidade +1" 
+  },
+  {
+    "id_evento": "EV002",
+    "titulo": "Lote de Matéria-Prima Reprovado",
+    "desc": "O lote essencial que chegou foi reprovado pela qualidade. O estoque está baixo.",
+    "op1_txt": "Qualidade Acima de Tudo: Segregar lote e buscar alternativa.",
+    "op1_ef": "Projeto -15, Determinação +1",
+    "op2_txt": "Risco Calculado: Usar parte do lote mesmo assim e reforçar inspeção.",
+    "op2_ef": "Estresse +2, Respeito -1"
+  },
+  {
+    "id_evento": "EV003",
+    "titulo": "Pico de Demanda Urgente",
+    "desc": "Pedido inesperado e prioritário do comercial chegou, desorganizando o plano original.",
+    "op1_txt": "Cliente VIP: Parar tudo e focar no pedido urgente.",
+    "op1_ef": "Projeto +20, Estresse +2",
+    "op2_txt": "Negociar Limites: Entregar o possível hoje e alinhar prazo realista.",
+    "op2_ef": "Respeito +1, Estresse -1"
+  },
+  {
+    "id_evento": "EV004",
+    "titulo": "Auditoria Interna de Segurança",
+    "desc": "Auditoria surpresa verificando cumprimento de normas de segurança e POPs.",
+    "op1_txt": "Transparência Total: Acompanhar auditoria e corrigir gaps na hora.",
+    "op1_ef": "Determinação +1, Respeito +1",
+    "op2_txt": "'Maquiar' a Casa: Correr para arrumar só o que o auditor vai ver.",
+    "op2_ef": "Estresse +1, Respeito -1"
+  },
+  {
+    "id_evento": "EV005",
+    "titulo": "Sugestão de Melhoria Rápida",
+    "desc": "Um operador sugeriu uma mudança simples que pode otimizar o processo, mas exigiria uma pequena parada.",
+    "op1_txt": "Apoiar Iniciativa: Parar rapidamente, testar e implementar se funcionar.",
+    "op1_ef": "Determinação +2, Respeito +1, Projeto +5",
+    "op2_txt": "Manter o Ritmo: Anotar a ideia para analisar depois, sem parar agora.",
+    "op2_ef": "Comodidade +1, Estresse -1"
+  }
+]

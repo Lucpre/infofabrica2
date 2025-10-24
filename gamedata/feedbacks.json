@@ -1,0 +1,57 @@
+{
+  "Sucesso": {
+    "Determinar": {
+      "titulo": "O Comandante Eficaz",
+      "analise_estilo_base": "Você focou em dar direções claras e tomar decisões rápidas ('Determinar'). Essa abordagem diretiva foi crucial para superar obstáculos e garantir a entrega sob pressão.",
+      "feedback_futuro": "Embora eficaz aqui, o uso excessivo do estilo 'Determinar' pode desgastar a equipe a longo prazo. Busque oportunidades para 'Orientar' ou 'Apoiar', desenvolvendo a autonomia do time."
+    },
+    "Orientar": {
+      "titulo": "O Treinador Persuasivo",
+      "analise_estilo_base": "Seu foco em explicar o 'porquê' e guiar a equipe ('Orientar') foi fundamental. Você vendeu as ideias e acompanhou a execução, garantindo alinhamento e engajamento.",
+      "feedback_futuro": "Ótimo trabalho! Continue usando 'Orientar' para desenvolver competências. Quando a equipe demonstrar mais segurança, experimente 'Apoiar' ou 'Delegar' para fomentar a independência."
+    },
+    "Apoiar": {
+      "titulo": "O Facilitador Motivador",
+      "analise_estilo_base": "Você priorizou ouvir, facilitar e dar suporte ('Apoiar'), criando um ambiente seguro que permitiu à equipe usar suas próprias habilidades para resolver problemas e entregar o projeto.",
+      "feedback_futuro": "Excelente! O estilo 'Apoiar' fortalece a confiança. Avalie se em alguns momentos um pouco mais de 'Orientação' poderia ter acelerado o desenvolvimento de certas habilidades na equipe."
+    },
+    "Delegar": {
+      "titulo": "O Líder Capacitador",
+      "analise_estilo_base": "Sua confiança em 'Delegar' tarefas e dar autonomia à equipe foi recompensada. Você soube sair do caminho e permitir que os talentos individuais brilhassem, alcançando o resultado.",
+      "feedback_futuro": "Parabéns por confiar na sua equipe! Lembre-se de monitorar discretamente e estar pronto para voltar a 'Apoiar' ou 'Orientar' caso surjam dificuldades inesperadas."
+    },
+    "Equilibrado": {
+      "titulo": "O Estratega Situacional",
+      "analise_estilo_base": "Você demonstrou grande flexibilidade, adaptando seu estilo ('Determinar', 'Orientar', 'Apoiar', 'Delegar') conforme a situação e a necessidade de cada membro da equipe. Esse equilíbrio foi a chave.",
+      "feedback_futuro": "Dominar a Liderança Situacional é um desafio contínuo. Continue aprimorando sua leitura do ambiente e da maturidade da equipe para aplicar o estilo certo no momento certo. Você está no caminho!"
+    }
+  },
+  "Fracasso": {
+    "Determinar": {
+      "titulo": "O Ditador Inflexível",
+      "analise_estilo_base": "O foco excessivo em dar ordens ('Determinar'), sem espaço para adaptação ou feedback, levou a equipe ao limite. A falta de flexibilidade pode ter gerado erros ou resistência.",
+      "feedback_futuro": "Comandar é necessário às vezes, mas não funciona sempre. Tente equilibrar com 'Orientar' (explicar o porquê) ou 'Apoiar' (ouvir as dificuldades) para engajar a equipe."
+    },
+    "Orientar": {
+      "titulo": "O Professor Teórico",
+      "analise_estilo_base": "Você gastou muita energia explicando e persuadindo ('Orientar'), mas talvez a equipe precisasse de mais direção ('Determinar') em momentos críticos ou mais autonomia ('Delegar') em tarefas que já dominavam.",
+      "feedback_futuro": "Explicar é bom, mas avalie se a equipe realmente precisa da explicação ou se já está pronta para agir sozinha (Delegar) ou se precisa de uma ordem direta (Determinar)."
+    },
+    "Apoiar": {
+      "titulo": "O Conselheiro Passivo",
+      "analise_estilo_base": "Sua ênfase em ouvir e facilitar ('Apoiar') foi bem-intencionada, mas a falta de direção ('Determinar') ou orientação ('Orientar') em momentos cruciais pode ter deixado a equipe perdida ou improdutiva.",
+      "feedback_futuro": "Apoiar é vital, mas não substitui a liderança ativa. Certifique-se de que, além de ouvir, você também está fornecendo a direção ou o conhecimento necessário para a equipe avançar."
+    },
+    "Delegar": {
+      "titulo": "O Chefe Ausente",
+      "analise_estilo_base": "Você deu muita autonomia ('Delegar'), possivelmente antes da equipe estar pronta. A falta de acompanhamento ('Orientar') ou suporte ('Apoiar') pode ter levado a erros ou desmotivação.",
+      "feedback_futuro": "Delegar funciona quando a equipe tem competência e motivação. Avalie melhor o nível de maturidade antes de delegar. Talvez 'Orientar' ou 'Apoiar' fossem mais adequados."
+    },
+    "Equilibrado": {
+      "titulo": "O Camaleão Confuso",
+      "analise_estilo_base": "Você tentou variar os estilos, mas a aplicação pode ter sido inconsistente ou inadequada para as situações. A equipe pode ter ficado confusa sem um padrão claro de liderança.",
+      "feedback_futuro": "A intenção de adaptar é correta, mas a chave é a *adequação*. Estude os níveis de maturidade (competência x motivação) da sua equipe em cada tarefa para escolher o estilo ('Determinar', 'Orientar', 'Apoiar', 'Delegar') que realmente se encaixa."
+    }
+  }
+}
+
