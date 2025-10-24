@@ -261,18 +261,20 @@ class GameManager:
             # Fundos e UI
             imagens['fundo_fabrica'] = pygame.transform.scale(pygame.image.load("assets/fundo_fabrica.png").convert(), (LARGURA_TELA, ALTURA_TELA))
             imagens['caixa_dialogo'] = pygame.image.load("assets/caixa_dialogo.png").convert_alpha()
+
+            
             
             # Botões
             imagens['botao_conversar_ativo'] = pygame.image.load("assets/botao_conversar_ativo.png").convert_alpha()
             imagens['botao_conversar_inativo'] = pygame.image.load("assets/botao_conversar_inativo.png").convert_alpha()
             imagens['botao_fundo'] = pygame.image.load("assets/botao_fundo.png").convert_alpha()
             
-            # Cards completos de personagens
+            # --- ATUALIZADO: Carregar RETRATOS em vez de cards completos ---
             for nome_arquivo in nomes:
                 imagens[nome_arquivo] = {}
                 for humor in humores:
-                    # User confirmed file naming convention for cards
-                    caminho = f"assets/{nome_arquivo}_{humor}_card.png"
+                    # O nome do arquivo agora é o RETRATO com fundo transparente
+                    caminho = f"assets/{nome_arquivo}_retrato_{humor}.png"
                     imagens[nome_arquivo][humor] = pygame.image.load(caminho).convert_alpha()
             # Fundos de relatório
             imagens['fundo_sucesso'] = pygame.transform.scale(pygame.image.load("assets/fundo_sucesso.png").convert(), (LARGURA_TELA, ALTURA_TELA))
@@ -442,24 +444,56 @@ class GameManager:
         for i, f in enumerate(self.equipe):
             card_rect = self.card_rects[i]
             
+            # --- ATUALIZADO: Montagem dinâmica com fundo por código e escala de imagem ---
+            
+            
+            # 1. Desenhar o fundo do card (Sua ideia!)
+            # Usa a cor CINZA (40,40,40) como fundo. Mude se quiser.
+            pygame.draw.rect(surface, CORES["CINZA"], card_rect, border_radius=10)
+
+            # 2. Definir tamanho padrão e desenhar o Retrato
             nome_arquivo = f.nome.lower().replace('ú', 'u')
             humor = self.get_humor_funcionario(f)
+            
+            retrato_rect = pygame.Rect(0,0,0,0) # Inicializa
+            
             if nome_arquivo in self.imagens and humor in self.imagens[nome_arquivo]:
-                card_img = self.imagens[nome_arquivo][humor]
-                surface.blit(card_img, card_rect.topleft)
-            # --- ATUALIZADO: Substituído círculos por barras de status ---
-            y_offset = card_rect.height - 85 # Ponto de partida vertical (como antes)
+                retrato_img_original = self.imagens[nome_arquivo][humor]
+                
+                # --- A MÁGICA ESTÁ AQUI ---
+                # Define o tamanho padrão para todos os retratos
+                TAMANHO_RETRATO = (240, 220) # (Largura, Altura) - Ajuste se precisar
+                try:
+                    retrato_img_scaled = pygame.transform.scale(retrato_img_original, TAMANHO_RETRATO)
+                except Exception as e:
+                    print(f"Erro ao redimensionar {nome_arquivo}: {e}")
+                    retrato_img_scaled = pygame.Surface(TAMANHO_RETRATO) # Cria um fallback
+                    retrato_img_scaled.fill(CORES["ROXO"]) # Cor de erro
+                
+                # Posiciona o retrato (agora redimensionado) centralizado na parte de cima
+                retrato_rect = retrato_img_scaled.get_rect(centerx=card_rect.centerx, top=card_rect.top + 20)
+                surface.blit(retrato_img_scaled, retrato_rect)
+            # --- Fim da Mágica (Fim do Bloco IF) ---
+
+            # 3. Desenhar o Nome do Funcionário (abaixo do retrato)
+            # --- CORRIGIDO: Este bloco agora está FORA do IF acima ---
+            nome_surf = FONTES["TEXTO"].render(f.nome, True, CORES["BRANCO"])
+            nome_rect = nome_surf.get_rect(centerx=card_rect.centerx, top=retrato_rect.bottom + 10)
+            surface.blit(nome_surf, nome_rect)
+
+            # 4. Desenhar as Barras de Status (abaixo do nome)
+            # A posição Y agora é dinâmica, baseada no nome
+            y_stats_start = nome_rect.bottom + 20 # Ponto de partida vertical
             barra_largura = 110 # Largura da barra
             barra_altura = 12   # Altura da barra
             
-            # Posições (Ajustadas para 2 colunas como estava antes)
             pos_x_col1 = card_rect.left + 20
             pos_x_col2 = card_rect.left + 150
             
-            y_linha1_texto = card_rect.top + y_offset
+            y_linha1_texto = y_stats_start
             y_linha1_barra = y_linha1_texto + 15 # Barra abaixo do texto
             
-            y_linha2_texto = card_rect.top + y_offset + 35 # Próxima linha
+            y_linha2_texto = y_stats_start + 35 # Próxima linha
             y_linha2_barra = y_linha2_texto + 15
 
             # --- Barra de Determinação (Linha 1, Col 1) ---
@@ -485,7 +519,7 @@ class GameManager:
             surface.blit(texto_str, (pos_x_col2, y_linha2_texto))
             barra_str_rect = pygame.Rect(pos_x_col2, y_linha2_barra, barra_largura, barra_altura)
             desenhar_barra_status(surface, barra_str_rect, f.estresse, 10, CORES["GRAFICO_ESTRESSE"], CORES["CINZA"])
-            # --- Fim da atualização ---    
+            # --- Fim da atualização ---  
 
             stats = {
                 "Determinacao": (f.determinacao, CORES["GRAFICO_DETERMINACAO"]),
