@@ -149,7 +149,7 @@ def desenhar_barra_status(surface, rect, valor_atual, valor_max=10, cor_cheia=(6
 class Botao:
     def __init__(self, x, y, l, a, t="", cor=CORES["CINZA_CLARO"], ativo=True):
         self.rect = pygame.Rect(x, y, l, a); self.texto, self.cor_fundo, self.ativo = t, cor, ativo
-    def desenhar(self, surface, imagem_ativa=None, imagem_inativa=None):
+    def desenhar(self, surface, pos_mouse_hover=(0,0), imagem_ativa=None, imagem_inativa=None):
         imagem_para_desenhar = None
         if self.ativo and imagem_ativa:
             imagem_para_desenhar = imagem_ativa
@@ -159,10 +159,17 @@ class Botao:
         if imagem_para_desenhar:
             surface.blit(imagem_para_desenhar, self.rect.topleft)
         else:
-            cor = self.cor_fundo if self.ativo else CORES["CINZA"]; pygame.draw.rect(surface, cor, self.rect, border_radius=5)
+            # Lógica de Hover: Muda a cor se o mouse estiver em cima
+            cor_atual = self.cor_fundo
+            if self.ativo and self.rect.collidepoint(pos_mouse_hover):
+                cor_atual = CORES["AZUL"] # Cor de Hover
+            
+            cor_desenho = cor_atual if self.ativo else CORES["CINZA"]; 
+            pygame.draw.rect(surface, cor_desenho, self.rect, border_radius=5)
 
         if self.texto:
-            cor_texto = CORES["PRETO"] if imagem_para_desenhar else CORES["BRANCO"]
+            # Cor do texto é sempre branca se não for imagem
+            cor_texto = CORES["BRANCO"]
             fonte = FONTES["TEXTO"] if self.rect.height >= 70 else FONTES["BOTAO"]
             # Render multi-line text if needed for dialogue options
             if '\n' in self.texto or fonte.size(self.texto)[0] > self.rect.width - 10:
@@ -405,11 +412,13 @@ class GameManager:
     def mostrar_feedback(self, texto, duracao=120): self.feedback_texto = texto; self.feedback_timer = duracao
     
     def desenhar(self, surface):
+        pos_mouse_hover = pygame.mouse.get_pos()
         mapa = {"TELA_DE_ESCOLHA": self.desenhar_tela_escolha, "TELA_EVENTO": self.desenhar_tela_evento, "TELA_DIALOGO": self.desenhar_tela_dialogo, "MODO_ALVO": self.desenhar_hud_jogo, "TELA_RELATORIO_FINAL": self.desenhar_tela_relatorio}
         desenho_func = mapa.get(self.estado_jogo, self.desenhar_hud_jogo)
-        desenho_func(surface)
+        desenho_func(surface, pos_mouse_hover)
         
-    def desenhar_tela_dialogo(self, surface):
+        
+    def desenhar_tela_dialogo(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         
         if self.imagens.get('caixa_dialogo'):
@@ -424,11 +433,13 @@ class GameManager:
         rect = pygame.Rect(caixa_rect.left + 30, caixa_rect.top + 70, caixa_rect.width - 60, caixa_rect.height - 90); 
         desenhar_texto_multilinha(surface, f'"{self.no_dialogo_atual.frase_abertura}"', rect, FONTES["DIALOGO"], CORES["BRANCO"]) # Adjust text pos
         
-        for b in self.botoes_dialogo: b.desenhar(surface, self.imagens.get('botao_fundo'))
-        self.botao_sair.desenhar(surface)
+        # --- ATUALIZADO: Passa pos_mouse_hover e remove 'botao_fundo' ---
+        for b in self.botoes_dialogo: b.desenhar(surface, pos_mouse_hover)
+        self.botao_sair.desenhar(surface, pos_mouse_hover)
 
 
-    def desenhar_hud_jogo(self, surface):
+
+    def desenhar_hud_jogo(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         
         # HUD Superior
@@ -548,19 +559,19 @@ class GameManager:
                 botao.ativo = tem_pa and (nome not in self.funcionarios_conversados_hoje)
                 botao.desenhar(surface, self.imagens.get('botao_conversar_ativo'), self.imagens.get('botao_conversar_inativo'))
         
-        self.botao_finalizar_dia.desenhar(surface, self.imagens.get('botao_fundo'))
-        self.botao_sair.desenhar(surface)
+        self.botao_finalizar_dia.desenhar(surface, pos_mouse_hover)
+        self.botao_sair.desenhar(surface, pos_mouse_hover)
 
         if self.feedback_timer > 0:
             fb_surf = FONTES["TEXTO"].render(self.feedback_texto, True, CORES["AMARELO"]); surface.blit(fb_surf, (LARGURA_TELA/2 - fb_surf.get_width()/2, ALTURA_TELA-150)); self.feedback_timer -= 1
     
-    def desenhar_tela_escolha(self, surface):
+    def desenhar_tela_escolha(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         ts = FONTES["TITULO"].render("Escolha seu Arquétipo", True, CORES["BRANCO"]); surface.blit(ts, (LARGURA_TELA/2 - ts.get_width()/2, 50))
-        for b in self.botoes_escolha_lider: b.desenhar(surface, self.imagens.get('botao_fundo'))
-        self.botao_sair.desenhar(surface)
+        for b in self.botoes_escolha_lider: b.desenhar(surface, pos_mouse_hover)
+        self.botao_sair.desenhar(surface, pos_mouse_hover)
 
-    def desenhar_tela_evento(self, surface):
+    def desenhar_tela_evento(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         
         caixa_img = self.imagens.get('caixa_dialogo')
@@ -587,11 +598,12 @@ class GameManager:
              b.rect.height = 70              # Define a altura aqui também
              b.rect.centerx = LARGURA_TELA / 2
              b.rect.top = caixa_rect.bottom + 20 + i * (b.rect.height + 15)
-             b.desenhar(surface, self.imagens.get('botao_fundo'))
+             # --- ATUALIZADO: Passa pos_mouse_hover e remove 'botao_fundo' ---
+             b.desenhar(surface, pos_mouse_hover)
 
-        self.botao_sair.desenhar(surface)
+        self.botao_sair.desenhar(surface, pos_mouse_hover)
     
-    def desenhar_tela_relatorio(self, surface):
+    def desenhar_tela_relatorio(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
         fundo_key = 'fundo_sucesso' if self.resultado_final == "Sucesso" else 'fundo_fracasso'
         fundo = self.imagens.get(fundo_key, self.imagens.get('fundo_fabrica')) # Fallback to factory
         if fundo:
@@ -636,7 +648,7 @@ class GameManager:
                  y_texto += 110 # Adjust spacing
 
 
-        self.botao_sair.desenhar(surface)
+        self.botao_sair.desenhar(surface, pos_mouse_hover)
 
     def terminar_jogo(self, resultado):
         self.resultado_final = resultado
