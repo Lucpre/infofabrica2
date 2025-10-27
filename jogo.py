@@ -301,7 +301,7 @@ class GameManager:
         self.hud_top_surface.fill((0, 0, 0, 120)) # Fundo preto, 120/255 de opacidade (Mais transparente)
         
         self.hud_bottom_surface = pygame.Surface((LARGURA_TELA, 80), pygame.SRCALPHA)
-        self.hud_bottom_surface.fill((0, 0, 0, 120)) # (Mais transparente)
+        self.hud_bottom_surface.fill((0, 0, 0, 80)) # (Mais transparente)
         
     def carregar_todas_imagens(self):
         imagens = {}
