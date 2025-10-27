@@ -11,7 +11,9 @@ pygame.init()
 # --- Constantes e Configuração ---
 LARGURA_TELA, ALTURA_TELA = 1280, 720
 NOME_JOGO = "Projeto Prisma: Simulação de Liderança"
-CORES = {"PRETO": (0,0,0), "BRANCO": (255,255,255), "AZUL": (100,149,237), "VERDE": (60,179,113), "VERMELHO": (205,92,92), "CINZA": (40,40,40), "CINZA_CLARO": (100,100,100), "AMARELO": (255,215,0), "ROXO": (148,0,211), "GRAFICO_RESPEITO": (255, 215, 0), "GRAFICO_DETERMINACAO": (102, 255, 102), "GRAFICO_ESTRESSE": (255, 102, 102), "GRAFICO_COMODIDADE": (102, 178, 255)}
+CORES = {"PRETO": (0,0,0), "BRANCO": (255,255,255), "AZUL": (100,149,237), "VERDE": (60,179,113), "VERMELHO": (205,92,92), "CINZA": (40,40,40), "CINZA_CLARO": (100,100,100), "AMARELO": (255,215,0), "ROXO": (148,0,211), 
+         "AZUL_ESCURO": (65, 105, 225), # MUDANÇA: Cor adicionada
+         "GRAFICO_RESPEITO": (255, 215, 0), "GRAFICO_DETERMINACAO": (102, 255, 102), "GRAFICO_ESTRESSE": (255, 102, 102), "GRAFICO_COMODIDADE": (102, 178, 255)}
 
 try:
     FONTE_PIXEL = pygame.font.Font("assets/font/PressStart2P-Regular.ttf", 14)
@@ -122,7 +124,28 @@ def parse_efeitos(texto):
             efeitos.append({"atributo": atributo, "valor": valor})
     return efeitos
 
-def desenhar_texto_multilinha(surface, text, rect, font, color):
+# --- NOVA FUNÇÃO ---
+# Esta função calcula a altura total que um texto multi-linha ocupará
+def calcular_altura_texto(text, rect_width, font):
+    linhas = []
+    palavras = text.split(' ')
+    linha_atual = ''
+    for palavra in palavras:
+        linha_teste = f"{linha_atual} {palavra}".strip()
+        if font.size(linha_teste)[0] > rect_width:
+            linhas.append(linha_atual)
+            linha_atual = palavra
+        else:
+            linha_atual = linha_teste
+    linhas.append(linha_atual)
+    
+    # Conta apenas linhas não vazias
+    linhas_validas = [l for l in linhas if l.strip()]
+    # Retorna a altura total (num linhas * altura da fonte)
+    return len(linhas_validas) * font.get_linesize()
+# --- FIM DA NOVA FUNÇÃO ---
+
+def desenhar_texto_multilinha(surface, text, rect, font, color, centralizado=False): # MUDANÇA: Adicionado 'centralizado'
     linhas = []; palavras = text.split(' '); linha_atual = ''
     for palavra in palavras:
         linha_teste = f"{linha_atual} {palavra}".strip()
@@ -133,22 +156,35 @@ def desenhar_texto_multilinha(surface, text, rect, font, color):
     y = rect.top + 5
     for linha in linhas:
         if linha.strip():
-            img = font.render(linha, True, color); surface.blit(img, (rect.left + 5, y)); y += font.get_linesize()
+            img = font.render(linha, True, color)
+            
+            # --- LÓGICA DE CENTRALIZAÇÃO ---
+            pos_x = rect.left + 5 # Padrão (esquerda)
+            if centralizado:
+                pos_x = rect.centerx - (img.get_width() // 2)
+            # --- FIM DA LÓGICA ---
 
-def desenhar_barra_status(surface, rect, valor_atual, valor_max=10, cor_cheia=(60,179,113), cor_vazia=(40,40,40)):
-    # Desenha a barra "vazia" (fundo)
+            surface.blit(img, (pos_x, y)); y += font.get_linesize()
+
+def desenhar_barra_status(surface, rect, valor_atual, valor_max, cor_cheia, cor_vazia=CORES["CINZA"]):
+    # Garante que o valor não passe do limite
+    valor_atual = max(0, min(valor_atual, valor_max))
+    
+    # 1. Desenha o fundo (a barra vazia)
     pygame.draw.rect(surface, cor_vazia, rect, border_radius=3)
-    # Calcula a largura da barra "cheia"
-    largura_cheia = (valor_atual / valor_max) * rect.width
-    if largura_cheia > 0:
-        # Desenha a barra "cheia" por cima
-        rect_cheia = pygame.Rect(rect.left, rect.top, largura_cheia, rect.height)
+    
+    if valor_atual > 0:
+        # 2. Calcula a largura da barra cheia
+        largura_cheia = (valor_atual / valor_max) * rect.width
+        rect_cheia = pygame.Rect(rect.left, rect.top, int(largura_cheia), rect.height)
+        
+        # 3. Desenha a barra cheia por cima
         pygame.draw.rect(surface, cor_cheia, rect_cheia, border_radius=3)
-           
 
 class Botao:
-    def __init__(self, x, y, l, a, t="", cor=CORES["CINZA_CLARO"], ativo=True):
+    def __init__(self, x, y, l, a, t="", cor=CORES["BRANCO"], ativo=True): # MUDANÇA: Cor padrão para BRANCO
         self.rect = pygame.Rect(x, y, l, a); self.texto, self.cor_fundo, self.ativo = t, cor, ativo
+    
     def desenhar(self, surface, pos_mouse_hover=(0,0), imagem_ativa=None, imagem_inativa=None):
         imagem_para_desenhar = None
         if self.ativo and imagem_ativa:
@@ -159,17 +195,17 @@ class Botao:
         if imagem_para_desenhar:
             surface.blit(imagem_para_desenhar, self.rect.topleft)
         else:
-            # Lógica de Hover: Muda a cor se o mouse estiver em cima
-            cor_atual = self.cor_fundo
-            if self.ativo and self.rect.collidepoint(pos_mouse_hover):
-                cor_atual = CORES["AZUL"] # Cor de Hover
+            # Lógica de Hover: Muda a cor se o mouse estiver sobre o botão
+            cor = self.cor_fundo
+            if not self.ativo:
+                cor = CORES["CINZA"]
+            elif self.rect.collidepoint(pos_mouse_hover):
+                cor = CORES["CINZA_CLARO"] # MUDANÇA: Cor de Hover para CINZA_CLARO
             
-            cor_desenho = cor_atual if self.ativo else CORES["CINZA"]; 
-            pygame.draw.rect(surface, cor_desenho, self.rect, border_radius=5)
+            pygame.draw.rect(surface, cor, self.rect, border_radius=5)
 
         if self.texto:
-            # Cor do texto é sempre branca se não for imagem
-            cor_texto = CORES["BRANCO"]
+            cor_texto = CORES["PRETO"] # MUDANÇA: Cor do texto para PRETO
             fonte = FONTES["TEXTO"] if self.rect.height >= 70 else FONTES["BOTAO"]
             # Render multi-line text if needed for dialogue options
             if '\n' in self.texto or fonte.size(self.texto)[0] > self.rect.width - 10:
@@ -245,12 +281,14 @@ class GameManager:
         self.lider_escolhido = None
         self.botoes_escolha_lider = [Botao(LARGURA_TELA/2-175, 150+i*100, 350, 70, a.nome) for i, a in enumerate(self.arquetipos_disponiveis)]
         self.botao_finalizar_dia = Botao(LARGURA_TELA-250, ALTURA_TELA-70, 200, 50, "Finalizar Dia")
-        self.botao_sair = Botao(LARGURA_TELA - 120, 20, 100, 40, "Sair", CORES["VERMELHO"])
+        self.botao_sair = Botao(LARGURA_TELA - 120, 15, 100, 40, "Sair", CORES["VERMELHO"]) # Y=15
         self.evento_atual = None; self.botoes_evento = []
         self.no_dialogo_atual = None; self.botoes_dialogo = []; self.funcionario_em_dialogo = None
         
-        self.card_rects = [pygame.Rect(40 + i * 310, 150, 280, 440) for i in range(len(self.equipe))]
-        self.botoes_conversar = {f.nome: Botao(self.card_rects[i].centerx - 90, self.card_rects[i].bottom + 10, 180, 50) for i, f in enumerate(self.equipe)}
+        # MUDANÇA: Cards movidos para Y=100 e altura diminuída para 480
+        self.card_rects = [pygame.Rect(40 + i * 310, 100, 280, 480) for i in range(len(self.equipe))]
+        # Botões de conversar agora calculam o 'bottom' com base na nova altura (sem sobreposição)
+        self.botoes_conversar = {f.nome: Botao(self.card_rects[i].centerx - 90, self.card_rects[i].bottom + 5, 180, 50, "Conversar") for i, f in enumerate(self.equipe)} # Y +5
 
         self.funcionarios_conversados_hoje = []
         self.botao_habilidade = None; self.feedback_texto = ""; self.feedback_timer = 0
@@ -258,6 +296,12 @@ class GameManager:
         
         # Store the current day's event ID
         self.id_evento_do_dia = None
+        # --- SURFACES SEMI-TRANSPARENTES (para o HUD) ---
+        self.hud_top_surface = pygame.Surface((LARGURA_TELA, 70), pygame.SRCALPHA)
+        self.hud_top_surface.fill((0, 0, 0, 120)) # Fundo preto, 120/255 de opacidade (Mais transparente)
+        
+        self.hud_bottom_surface = pygame.Surface((LARGURA_TELA, 80), pygame.SRCALPHA)
+        self.hud_bottom_surface.fill((0, 0, 0, 120)) # (Mais transparente)
         
     def carregar_todas_imagens(self):
         imagens = {}
@@ -267,22 +311,23 @@ class GameManager:
         try:
             # Fundos e UI
             imagens['fundo_fabrica'] = pygame.transform.scale(pygame.image.load("assets/fundo_fabrica.png").convert(), (LARGURA_TELA, ALTURA_TELA))
-            imagens['caixa_dialogo'] = pygame.image.load("assets/caixa_dialogo.png").convert_alpha()
-
             
+            # REMOVIDO: Carregamento de imagens de UI (caixa_dialogo, botoes)
             
-            # Botões
-            imagens['botao_conversar_ativo'] = pygame.image.load("assets/botao_conversar_ativo.png").convert_alpha()
-            imagens['botao_conversar_inativo'] = pygame.image.load("assets/botao_conversar_inativo.png").convert_alpha()
-            imagens['botao_fundo'] = pygame.image.load("assets/botao_fundo.png").convert_alpha()
-            
-            # --- ATUALIZADO: Carregar RETRATOS em vez de cards completos ---
+            # Carregar retratos redimensionados
+            TAMANHO_RETRATO = (240, 220) # Define o tamanho padrão aqui
             for nome_arquivo in nomes:
-                imagens[nome_arquivo] = {}
                 for humor in humores:
-                    # O nome do arquivo agora é o RETRATO com fundo transparente
+                    # User confirmed file naming convention for cards
                     caminho = f"assets/{nome_arquivo}_retrato_{humor}.png"
-                    imagens[nome_arquivo][humor] = pygame.image.load(caminho).convert_alpha()
+                    try:
+                        img = pygame.image.load(caminho).convert_alpha()
+                        # Redimensiona NO CARREGAMENTO e armazena na RAIZ do dict
+                        imagens[f"{nome_arquivo}_retrato_{humor}"] = pygame.transform.scale(img, TAMANHO_RETRATO)
+                    except pygame.error:
+                        print(f"AVISO: Retrato não encontrado: {caminho}")
+                        imagens[f"{nome_arquivo}_retrato_{humor}"] = None # Adiciona None se falhar
+
             # Fundos de relatório
             imagens['fundo_sucesso'] = pygame.transform.scale(pygame.image.load("assets/fundo_sucesso.png").convert(), (LARGURA_TELA, ALTURA_TELA))
             imagens['fundo_fracasso'] = pygame.transform.scale(pygame.image.load("assets/fundo_fracasso.png").convert(), (LARGURA_TELA, ALTURA_TELA))
@@ -290,6 +335,8 @@ class GameManager:
         except pygame.error as e:
             print(f"Erro ao carregar imagem: {e}. Verifique a pasta 'assets' e os nomes dos arquivos.")
         return imagens
+        self.botao_sair.desenhar(surface, pos_mouse_hover)
+        # --- FIM DO NOVO LAYOUT ---
 
     def processar_input(self, event):
         if event.type != pygame.MOUSEBUTTONDOWN: return
@@ -382,16 +429,78 @@ class GameManager:
     def criar_botoes_dialogo(self):
         self.botoes_dialogo = []
         opcoes = self.no_dialogo_atual.opcoes
-        largura_botao, altura_botao = 450, 75 # Adjusted size slightly
-        num_opcoes = len(opcoes)
-        # Adjust vertical spacing based on number of options
-        espacamento_vertical = altura_botao + (20 if num_opcoes <= 3 else 15)
-        pos_y_inicial = ALTURA_TELA - (num_opcoes * espacamento_vertical) - 30 # Position from bottom
+        
+        # --- LÓGICA ATUALIZADA PARA GRID 2x2 ---
+        # 1. Definir a área do grid (terço inferior)
+        altura_grid = ALTURA_TELA // 3 # 720 / 3 = 240
+        pos_y_grid_inicio = ALTURA_TELA - altura_grid - 20 # Começa em y=460
+        
+        # 2. Definir colunas e larguras
+        margem_lateral = 40
+        margem_central = 20
+        largura_botao = (LARGURA_TELA - (margem_lateral * 2) - margem_central) // 2
+        altura_botao = (altura_grid - 40) // 2 # Duas linhas com 20px de margem
+        
+        pos_x_col1 = margem_lateral
+        pos_x_col2 = margem_lateral + largura_botao + margem_central
+        
+        pos_y_row1 = pos_y_grid_inicio
+        pos_y_row2 = pos_y_grid_inicio + altura_botao + 20
+
+        posicoes = [
+            (pos_x_col1, pos_y_row1), # Botão 0
+            (pos_x_col2, pos_y_row1), # Botão 1
+            (pos_x_col1, pos_y_row2), # Botão 2
+            (pos_x_col2, pos_y_row2)  # Botão 3
+        ]
+        # --- FIM DA LÓGICA ATUALIZADA ---
 
         for i, o in enumerate(opcoes):
-            pos_x = (LARGURA_TELA - largura_botao) / 2
-            pos_y = pos_y_inicial + i * espacamento_vertical
-            self.botoes_dialogo.append(Botao(pos_x, pos_y, largura_botao, altura_botao, o.texto_resposta))
+            if i < len(posicoes): # Garante que não temos mais de 4 opções
+                pos_x, pos_y = posicoes[i]
+                self.botoes_dialogo.append(Botao(pos_x, pos_y, largura_botao, altura_botao, o.texto_resposta))
+
+    # --- NOVA FUNÇÃO ---
+    def criar_botoes_evento(self):
+        self.botoes_evento = []
+        opcoes = self.evento_atual.opcoes
+        
+        # Lógica do grid 2x2 (copiada de criar_botoes_dialogo)
+        altura_grid = ALTURA_TELA // 3 # 240
+        pos_y_grid_inicio = ALTURA_TELA - altura_grid - 20 # y=460
+        
+        margem_lateral = 40
+        margem_central = 20
+        largura_botao = (LARGURA_TELA - (margem_lateral * 2) - margem_central) // 2
+        altura_botao = (altura_grid - 40) // 2 
+        
+        pos_x_col1 = margem_lateral
+        pos_x_col2 = margem_lateral + largura_botao + margem_central
+        
+        pos_y_row1 = pos_y_grid_inicio
+        pos_y_row2 = pos_y_grid_inicio + altura_botao + 20
+
+        # Eventos só têm 2 opções, então usamos as duas posições de cima
+        posicoes = [
+            (pos_x_col1, pos_y_row1), # Botão 0
+            (pos_x_col2, pos_y_row1), # Botão 1
+        ]
+
+        for i, o in enumerate(opcoes):
+            if i < len(posicoes): 
+                pos_x, pos_y = posicoes[i]
+                # Faz os botões de evento ocuparem a largura toda se forem só 2
+                # (Ajuste opcional, mas fica bom)
+                largura_final = largura_botao
+                if len(opcoes) == 2:
+                    largura_final = LARGURA_TELA - (margem_lateral * 2) # Ocupa a linha toda
+                    pos_x = margem_lateral
+                    if i == 1: # Se for o segundo botão
+                        pos_y = pos_y_row2 # Joga para a segunda linha
+                
+                self.botoes_evento.append(Botao(pos_x, pos_y, largura_final, altura_botao, o.texto_resposta))
+    # --- FIM DA NOVA FUNÇÃO ---            
+
 
 
     def aplicar_efeitos(self, efeitos, alvo_especifico=None, source='dialog'): # Added source
@@ -417,193 +526,239 @@ class GameManager:
         desenho_func = mapa.get(self.estado_jogo, self.desenhar_hud_jogo)
         desenho_func(surface, pos_mouse_hover)
         
-        
-    def desenhar_tela_dialogo(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
+    def desenhar_tela_dialogo(self, surface, pos_mouse_hover=(0,0)):
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         
-        if self.imagens.get('caixa_dialogo'):
-            caixa_img = self.imagens.get('caixa_dialogo')
-            caixa_rect = caixa_img.get_rect(center=(LARGURA_TELA / 2, 150)) # Position caixa higher
-            surface.blit(caixa_img, caixa_rect)
+        # --- LAYOUT DE DIÁLOGO COMPLETAMENTE NOVO ---
 
-        titulo_surf = FONTES["TITULO"].render(f"Conversando com: {self.funcionario_em_dialogo.nome}", True, CORES["BRANCO"])
-        titulo_rect = titulo_surf.get_rect(center=(LARGURA_TELA / 2, caixa_rect.top + 40)) # Adjust title pos
+        # 1. Definir e desenhar a caixa de diálogo principal (larga)
+        # (Posicionada acima do grid de botões)
+        altura_caixa = 250
+        caixa_dialogo_rect = pygame.Rect(40, (ALTURA_TELA // 2) - (altura_caixa // 2) - 50, LARGURA_TELA - 80, altura_caixa)
+        pygame.draw.rect(surface, CORES["CINZA"], caixa_dialogo_rect, border_radius=10)
+
+        # 2. Carregar e desenhar o retrato do funcionário (à direita)
+        retrato_img = None
+        TAMANHO_RETRATO = (240, 220) # Mesmo tamanho do card
+        if self.funcionario_em_dialogo:
+            nome_arquivo = self.funcionario_em_dialogo.nome.lower().replace('ú', 'u')
+            humor = self.get_humor_funcionario(self.funcionario_em_dialogo)
+            retrato_img_key = f"{nome_arquivo}_retrato_{humor}"
+            
+            # --- DEBUG ADICIONADO ---
+            # print(f"[DEBUG] Procurando retrato com a chave: '{retrato_img_key}'")
+            # --- FIM DO DEBUG ---
+            
+            retrato_img = self.imagens.get(retrato_img_key)
+
+        if retrato_img:
+            # Redimensiona se necessário (o código de carregar já faz, mas é uma garantia)
+            if retrato_img.get_size() != TAMANHO_RETRATO:
+                 retrato_img = pygame.transform.scale(retrato_img, TAMANHO_RETRATO)
+            
+            # Posiciona o retrato dentro da caixa, à direita
+            pos_retrato_x = caixa_dialogo_rect.right - TAMANHO_RETRATO[0] - 15
+            pos_retrato_y = caixa_dialogo_rect.centery - (TAMANHO_RETRATO[1] // 2)
+            surface.blit(retrato_img, (pos_retrato_x, pos_retrato_y))
+        else:
+            # --- DEBUG ADICIONADO ---
+            if self.funcionario_em_dialogo: # Só imprime se deveria haver um funcionário
+                print(f"[DEBUG] FALHA: Retrato não encontrado no dict self.imagens. Chave '{retrato_img_key}' retornou None.")
+            # --- FIM DO DEBUG ---
+        
+        largura_retrato_com_margem = TAMANHO_RETRATO[0] + 30 if retrato_img else 0
+
+        # 3. Desenhar o Título (Nome do funcionário) - (À esquerda)
+        titulo_surf = FONTES["TITULO"].render(f"{self.funcionario_em_dialogo.nome} diz:", True, CORES["BRANCO"])
+        titulo_rect = titulo_surf.get_rect(left=caixa_dialogo_rect.left + 30, top=caixa_dialogo_rect.top + 25)
         surface.blit(titulo_surf, titulo_rect)
 
-        rect = pygame.Rect(caixa_rect.left + 30, caixa_rect.top + 70, caixa_rect.width - 60, caixa_rect.height - 90); 
-        desenhar_texto_multilinha(surface, f'"{self.no_dialogo_atual.frase_abertura}"', rect, FONTES["DIALOGO"], CORES["BRANCO"]) # Adjust text pos
+        # 4. Desenhar o Texto da Fala (À esquerda, com quebra de linha)
+        # O retângulo do texto agora é menor para não sobrepor o retrato
+        largura_texto = caixa_dialogo_rect.width - largura_retrato_com_margem - 60 # 30 margem esq, 30 margem dir
+        rect_texto = pygame.Rect(caixa_dialogo_rect.left + 30, caixa_dialogo_rect.top + 80, largura_texto, caixa_dialogo_rect.height - 100)
+        desenhar_texto_multilinha(surface, f'"{self.no_dialogo_atual.frase_abertura}"', rect_texto, FONTES["DIALOGO"], CORES["BRANCO"])
         
-        # --- ATUALIZADO: Passa pos_mouse_hover e remove 'botao_fundo' ---
-        for b in self.botoes_dialogo: b.desenhar(surface, pos_mouse_hover)
+        # 5. Desenhar os botões do grid (já calculados)
+        for b in self.botoes_dialogo: 
+            b.desenhar(surface, pos_mouse_hover)
+        
         self.botao_sair.desenhar(surface, pos_mouse_hover)
+        # --- FIM DO NOVO LAYOUT ---
 
 
-
-    def desenhar_hud_jogo(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
+    def desenhar_hud_jogo(self, surface, pos_mouse_hover=(0,0)):
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         
-        # HUD Superior
-        dia_surf = FONTES["TEXTO"].render(f"Dia: {self.projeto.get_dia_semana()}", True, CORES["BRANCO"])
-        surface.blit(dia_surf, (50, 20))
-        pontos_surf = FONTES["TEXTO"].render(f"Pontos: {self.projeto.pontos_de_projeto}/{self.projeto.meta_pontos}", True, CORES["BRANCO"])
-        surface.blit(pontos_surf, (LARGURA_TELA - pontos_surf.get_width() - 50, 20))
-        if self.lider_escolhido:
-            pa_surf = FONTES["TEXTO"].render(f"PA: {self.lider_escolhido.pontos_acao}", True, CORES["AMARELO"])
-            surface.blit(pa_surf, (LARGURA_TELA/2 - pa_surf.get_width()/2, 20))
+        # --- 1. HUD Superior (Barra de Infos) ---
+        surface.blit(self.hud_top_surface, (0, 0))
         
-        # Cards dos Funcionários
+        # Dia (Destaque)
+        dia_surf = FONTES["TITULO"].render(f"{self.projeto.get_dia_semana()}", True, CORES["BRANCO"])
+        dia_rect = dia_surf.get_rect(left=30, centery=35)
+        surface.blit(dia_surf, dia_rect)
+
+        if self.lider_escolhido:
+            # PA (Evidente) - MUDANÇA: Cor trocada para AZUL_ESCURO
+            pa_surf = FONTES["TITULO"].render(f"PA: {self.lider_escolhido.pontos_acao}", True, CORES["AZUL_ESCURO"])
+            pa_rect = pa_surf.get_rect(centerx=LARGURA_TELA/2, centery=35)
+            surface.blit(pa_surf, pa_rect)
+        
+        # Pontos (Corrigido e alinhado à direita)
+        # MUDANÇA: Texto completo e fonte menor para caber
+        pontos_str = f"Pontos de Projeto: {self.projeto.pontos_de_projeto}/{self.projeto.meta_pontos}"
+        pontos_surf = FONTES["TEXTO"].render(pontos_str, True, CORES["BRANCO"]) # Fonte TEXTO (14px)
+        pontos_rect = pontos_surf.get_rect(right=LARGURA_TELA - 140, centery=35) # 140px de margem (botão sair)
+        surface.blit(pontos_surf, pontos_rect)
+        
+        # Botão Sair (Dentro do HUD)
+        self.botao_sair.desenhar(surface, pos_mouse_hover) # Posição já foi atualizada no __init__
+        
+        
+        # --- 2. Cards dos Funcionários (Layout Interno Corrigido) ---
         for i, f in enumerate(self.equipe):
             card_rect = self.card_rects[i]
             
-            # --- ATUALIZADO: Montagem dinâmica com fundo por código e escala de imagem ---
-            
-            
-            # 1. Desenhar o fundo do card (Sua ideia!)
-            # Usa a cor CINZA (40,40,40) como fundo. Mude se quiser.
+            # 1. Fundo do card
             pygame.draw.rect(surface, CORES["CINZA"], card_rect, border_radius=10)
 
-            # 2. Definir tamanho padrão e desenhar o Retrato
+            # 2. Retrato
+            retrato_img = None
+            TAMANHO_RETRATO = (240, 220) 
+            
             nome_arquivo = f.nome.lower().replace('ú', 'u')
             humor = self.get_humor_funcionario(f)
-            
-            retrato_rect = pygame.Rect(0,0,0,0) # Inicializa
-            
-            if nome_arquivo in self.imagens and humor in self.imagens[nome_arquivo]:
-                retrato_img_original = self.imagens[nome_arquivo][humor]
-                
-                # --- A MÁGICA ESTÁ AQUI ---
-                # Define o tamanho padrão para todos os retratos
-                TAMANHO_RETRATO = (240, 220) # (Largura, Altura) - Ajuste se precisar
-                try:
-                    retrato_img_scaled = pygame.transform.scale(retrato_img_original, TAMANHO_RETRATO)
-                except Exception as e:
-                    print(f"Erro ao redimensionar {nome_arquivo}: {e}")
-                    retrato_img_scaled = pygame.Surface(TAMANHO_RETRATO) # Cria um fallback
-                    retrato_img_scaled.fill(CORES["ROXO"]) # Cor de erro
-                
-                # Posiciona o retrato (agora redimensionado) centralizado na parte de cima
-                retrato_rect = retrato_img_scaled.get_rect(centerx=card_rect.centerx, top=card_rect.top + 20)
-                surface.blit(retrato_img_scaled, retrato_rect)
-            # --- Fim da Mágica (Fim do Bloco IF) ---
+            retrato_img_key = f"{nome_arquivo}_retrato_{humor}"
+            retrato_img = self.imagens.get(retrato_img_key)
 
-            # 3. Desenhar o Nome do Funcionário (abaixo do retrato)
-            # --- CORRIGIDO: Este bloco agora está FORA do IF acima ---
+            # Posição Y do retrato (relativa ao card)
+            pos_retrato_y = card_rect.top + 15
+
+            if retrato_img:
+                if retrato_img.get_size() != TAMANHO_RETRATO:
+                    retrato_img = pygame.transform.scale(retrato_img, TAMANHO_RETRATO)
+                
+                pos_retrato_x = card_rect.centerx - (TAMANHO_RETRATO[0] // 2)
+                surface.blit(retrato_img, (pos_retrato_x, pos_retrato_y))
+            
+            # 3. Nome do Funcionário (Posição Y Corrigida)
+            # Y é (posição Y do retrato + altura do retrato + 25px de padding)
+            pos_nome_y = (pos_retrato_y + TAMANHO_RETRATO[1]) + 25 
             nome_surf = FONTES["TEXTO"].render(f.nome, True, CORES["BRANCO"])
-            nome_rect = nome_surf.get_rect(centerx=card_rect.centerx, top=retrato_rect.bottom + 10)
+            nome_rect = nome_surf.get_rect(center=(card_rect.centerx, pos_nome_y))
             surface.blit(nome_surf, nome_rect)
 
-            # 4. Desenhar as Barras de Status (abaixo do nome)
-            # A posição Y agora é dinâmica, baseada no nome
-            y_stats_start = nome_rect.bottom + 20 # Ponto de partida vertical
-            barra_largura = 110 # Largura da barra
-            barra_altura = 12   # Altura da barra
-            
-            pos_x_col1 = card_rect.left + 20
-            pos_x_col2 = card_rect.left + 150
-            
-            y_linha1_texto = y_stats_start
-            y_linha1_barra = y_linha1_texto + 15 # Barra abaixo do texto
-            
-            y_linha2_texto = y_stats_start + 35 # Próxima linha
-            y_linha2_barra = y_linha2_texto + 15
-
-            # --- Barra de Determinação (Linha 1, Col 1) ---
-            texto_det = FONTES["BOTAO"].render("Determin.", True, CORES["BRANCO"])
-            surface.blit(texto_det, (pos_x_col1, y_linha1_texto))
-            barra_det_rect = pygame.Rect(pos_x_col1, y_linha1_barra, barra_largura, barra_altura)
-            desenhar_barra_status(surface, barra_det_rect, f.determinacao, 10, CORES["GRAFICO_DETERMINACAO"], CORES["CINZA"])
-
-            # --- Barra de Respeito (Linha 1, Col 2) ---
-            texto_res = FONTES["BOTAO"].render("Respeito", True, CORES["BRANCO"])
-            surface.blit(texto_res, (pos_x_col2, y_linha1_texto))
-            barra_res_rect = pygame.Rect(pos_x_col2, y_linha1_barra, barra_largura, barra_altura)
-            desenhar_barra_status(surface, barra_res_rect, f.respeito, 10, CORES["GRAFICO_RESPEITO"], CORES["CINZA"])
-
-            # --- Barra de Comodidade (Linha 2, Col 1) ---
-            texto_com = FONTES["BOTAO"].render("Comodid.", True, CORES["BRANCO"])
-            surface.blit(texto_com, (pos_x_col1, y_linha2_texto))
-            barra_com_rect = pygame.Rect(pos_x_col1, y_linha2_barra, barra_largura, barra_altura)
-            desenhar_barra_status(surface, barra_com_rect, f.comodidade, 10, CORES["GRAFICO_COMODIDADE"], CORES["CINZA"])
-            
-            # --- Barra de Estresse (Linha 2, Col 2) ---
-            texto_str = FONTES["BOTAO"].render("Estresse", True, CORES["BRANCO"])
-            surface.blit(texto_str, (pos_x_col2, y_linha2_texto))
-            barra_str_rect = pygame.Rect(pos_x_col2, y_linha2_barra, barra_largura, barra_altura)
-            desenhar_barra_status(surface, barra_str_rect, f.estresse, 10, CORES["GRAFICO_ESTRESSE"], CORES["CINZA"])
-            # --- Fim da atualização ---  
-
+            # 4. Barras de Status (Posição Y Corrigida)
             stats = {
-                "Determinacao": (f.determinacao, CORES["GRAFICO_DETERMINACAO"]),
+                "Determinação": (f.determinacao, CORES["GRAFICO_DETERMINACAO"]),
                 "Respeito": (f.respeito, CORES["GRAFICO_RESPEITO"]),
                 "Comodidade": (f.comodidade, CORES["GRAFICO_COMODIDADE"]),
-                "Stress": (f.estresse, CORES["GRAFICO_ESTRESSE"])
+                "Estresse": (f.estresse, CORES["GRAFICO_ESTRESSE"])
             }
             
-            y_offset = card_rect.height - 85
-            for j, (nome_stat, (valor, cor)) in enumerate(stats.items()):
-                pos_texto = (card_rect.left + 20, card_rect.top + y_offset + (j // 2) * 35)
-                pos_circulo = (card_rect.left + 240, card_rect.top + y_offset + (j // 2) * 35 + 8)
+            # Posição inicial Y (abaixo do nome)
+            y_barra_atual = nome_rect.bottom + 15 
+            
+            barra_largura_max = card_rect.width - 60 
+            pos_x_barra = card_rect.left + 30
+            altura_barra = 15
+            espaco_entre_barras = 7 # MUDANÇA: Espaço diminuído de 30 para 10
+
+            for nome_stat, (valor, cor) in stats.items():
+                rotulo_surf = FONTES["BOTAO"].render(nome_stat, True, CORES["BRANCO"])
+                rotulo_rect = rotulo_surf.get_rect(left=pos_x_barra, top=y_barra_atual)
+                surface.blit(rotulo_surf, rotulo_rect)
                 
-                if j % 2 != 0: 
-                    pos_texto = (card_rect.left + 150, card_rect.top + y_offset + (j // 2) * 35)
-                    pos_circulo = (card_rect.left + 260, card_rect.top + y_offset + (j // 2) * 35 + 8)
+                y_barra = rotulo_rect.bottom + 5
+                barra_rect = pygame.Rect(pos_x_barra, y_barra, barra_largura_max, altura_barra)
+                
+                desenhar_barra_status(surface, barra_rect, valor, 10, cor)
 
-                texto_surf = FONTES["BOTAO"].render(f"{nome_stat} {valor}", True, CORES["BRANCO"])
-                surface.blit(texto_surf, pos_texto)
-                pygame.draw.circle(surface, cor, pos_circulo, 7)
+                # Incrementar a posição Y
+                y_barra_atual = barra_rect.bottom + espaco_entre_barras 
 
-        # Botões de Conversar
+        # --- 3. Botões de Conversar ---
+        # (Posição já foi atualizada no __init__ e não sobrepõe mais a barra inferior)
         if self.lider_escolhido:
             tem_pa = self.lider_escolhido.pontos_acao > 0
             for nome, botao in self.botoes_conversar.items(): 
                 botao.ativo = tem_pa and (nome not in self.funcionarios_conversados_hoje)
-                botao.desenhar(surface, self.imagens.get('botao_conversar_ativo'), self.imagens.get('botao_conversar_inativo'))
+                botao.desenhar(surface, pos_mouse_hover)
         
-        self.botao_finalizar_dia.desenhar(surface, pos_mouse_hover)
-        self.botao_sair.desenhar(surface, pos_mouse_hover)
+        # --- 4. HUD Inferior (Barra de Ações) ---
+        surface.blit(self.hud_bottom_surface, (0, ALTURA_TELA - 80))
+        
+        # Botão de Habilidade (Agora aparece)
+        if self.botao_habilidade:
+            # Centraliza o botão de habilidade na barra inferior
+            self.botao_habilidade.rect.center = (LARGURA_TELA / 2, ALTURA_TELA - 40)
+            self.botao_habilidade.desenhar(surface, pos_mouse_hover)
 
+        # Botão Finalizar Dia (Movido para a barra inferior)
+        self.botao_finalizar_dia.rect.center = (LARGURA_TELA - 160, ALTURA_TELA - 40) # Alinhado à direita
+        self.botao_finalizar_dia.desenhar(surface, pos_mouse_hover)
+
+        # Feedback (ex: "Sem PA")
         if self.feedback_timer > 0:
-            fb_surf = FONTES["TEXTO"].render(self.feedback_texto, True, CORES["AMARELO"]); surface.blit(fb_surf, (LARGURA_TELA/2 - fb_surf.get_width()/2, ALTURA_TELA-150)); self.feedback_timer -= 1
+            fb_surf = FONTES["TEXTO"].render(self.feedback_texto, True, CORES["AMARELO"])
+            # Posição Y movida para cima da barra inferior
+            fb_rect = fb_surf.get_rect(center=(LARGURA_TELA/2, ALTURA_TELA - 110))
+            surface.blit(fb_surf, fb_rect)
+            self.feedback_timer -= 1
     
-    def desenhar_tela_escolha(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
+    def desenhar_tela_escolha(self, surface, pos_mouse_hover=(0,0)):
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         ts = FONTES["TITULO"].render("Escolha seu Arquétipo", True, CORES["BRANCO"]); surface.blit(ts, (LARGURA_TELA/2 - ts.get_width()/2, 50))
-        for b in self.botoes_escolha_lider: b.desenhar(surface, pos_mouse_hover)
-        self.botao_sair.desenhar(surface, pos_mouse_hover)
+        for b in self.botoes_escolha_lider: b.desenhar(surface, pos_mouse_hover) # Passa o hover
+        self.botao_sair.desenhar(surface, pos_mouse_hover) # Passa o hover
 
-    def desenhar_tela_evento(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
+    def desenhar_tela_evento(self, surface, pos_mouse_hover=(0,0)):
         surface.blit(self.imagens.get('fundo_fabrica'), (0,0))
         
-        caixa_img = self.imagens.get('caixa_dialogo')
-        # Define caixa_rect COM a imagem OU com fallback ANTES de usar
-        if caixa_img:
-             caixa_rect = caixa_img.get_rect(center=(LARGURA_TELA / 2, 200)) # Center event box
-             surface.blit(caixa_img, caixa_rect)
-        else:
-             # Define caixa_rect com as dimensões do fallback se a imagem falhar
-             caixa_rect = pygame.Rect(0, 0, LARGURA_TELA - 200, 300) # Exemplo: Largura da tela - margens, Altura fixa
-             caixa_rect.center = (LARGURA_TELA / 2, 200)
-             pygame.draw.rect(surface, CORES["CINZA"], caixa_rect, border_radius=10) # Desenha o fallback
+        # --- LAYOUT DE EVENTO ATUALIZADO (Dinâmico e Centralizado) ---
         
-        titulo_surf = FONTES["TITULO"].render(self.evento_atual.titulo, True, CORES["BRANCO"])
-        titulo_rect = titulo_surf.get_rect(center=(LARGURA_TELA / 2, caixa_rect.top + 40)) # Position title inside
-        surface.blit(titulo_surf, titulo_rect)
+        # 1. Calcular altura do texto PRIMEIRO
+        descricao_texto = f'"{self.evento_atual.descricao}"'
+        font_desc = FONTES["DIALOGO"]
+        # Largura da caixa (LARGURA_TELA - 80) - margens internas (60)
+        largura_texto = (LARGURA_TELA - 80) - 60 
         
-        rect_desc = pygame.Rect(caixa_rect.left + 30, caixa_rect.top + 70, caixa_rect.width - 60, caixa_rect.height - 120); 
-        desenhar_texto_multilinha(surface, f'"{self.evento_atual.descricao}"', rect_desc, FONTES["DIALOGO"], CORES["BRANCO"]) # Position desc inside
+        altura_texto_calculada = calcular_altura_texto(descricao_texto, largura_texto, font_desc)
         
-        # Position buttons below the event box (agora caixa_rect sempre existe)
-        for i, b in enumerate(self.botoes_evento):
-             b.rect.width = LARGURA_TELA - 300 # Define a largura aqui também
-             b.rect.height = 70              # Define a altura aqui também
-             b.rect.centerx = LARGURA_TELA / 2
-             b.rect.top = caixa_rect.bottom + 20 + i * (b.rect.height + 15)
-             # --- ATUALIZADO: Passa pos_mouse_hover e remove 'botao_fundo' ---
-             b.desenhar(surface, pos_mouse_hover)
+        # 2. Definir altura da caixa dinamicamente
+        margem_vertical_titulo = 80 # Espaço para o título
+        padding_vertical_caixa = 40 # Espaço abaixo do texto
+        altura_caixa_dinamica = margem_vertical_titulo + altura_texto_calculada + padding_vertical_caixa
+        
+        # Posição Y centralizada para a nova altura
+        pos_y_caixa = (ALTURA_TELA // 2) - (altura_caixa_dinamica // 2) - 50 # Sobe 50 para dar espaço aos botões
+        
+        caixa_dialogo_rect = pygame.Rect(40, pos_y_caixa, LARGURA_TELA - 80, altura_caixa_dinamica)
+        pygame.draw.rect(surface, CORES["CINZA"], caixa_dialogo_rect, border_radius=10)
 
-        self.botao_sair.desenhar(surface, pos_mouse_hover)
+        # 3. Desenhar o Título (com símbolo de alarme)
+        titulo_evento = f"[ ! ] {self.evento_atual.titulo} [ ! ]"
+        titulo_surf = FONTES["TITULO"].render(titulo_evento, True, CORES["BRANCO"])
+        titulo_rect = titulo_surf.get_rect(center=(caixa_dialogo_rect.centerx, caixa_dialogo_rect.top + 40))
+        surface.blit(titulo_surf, titulo_rect)
+
+        # 4. Definir o rect do texto e desenhar CENTRALIZADO
+        rect_texto = pygame.Rect(
+            caixa_dialogo_rect.left + 30, 
+            caixa_dialogo_rect.top + margem_vertical_titulo, # Abaixo do título
+            largura_texto, 
+            altura_texto_calculada + 10 # +10 de 'folga'
+        )
+        desenhar_texto_multilinha(surface, descricao_texto, rect_texto, font_desc, CORES["BRANCO"], centralizado=True)
+        
+        # 5. Desenhar os botões do grid
+        for b in self.botoes_evento: 
+            b.desenhar(surface, pos_mouse_hover)
+
+        self.botao_sair.desenhar(surface, pos_mouse_hover) # Passa o hover
+        # --- FIM DA ATUALIZAÇÃO ---
     
-    def desenhar_tela_relatorio(self, surface, pos_mouse_hover): # Aceita pos_mouse_hover
+    def desenhar_tela_relatorio(self, surface, pos_mouse_hover=(0,0)):
         fundo_key = 'fundo_sucesso' if self.resultado_final == "Sucesso" else 'fundo_fracasso'
         fundo = self.imagens.get(fundo_key, self.imagens.get('fundo_fabrica')) # Fallback to factory
         if fundo:
@@ -613,13 +768,9 @@ class GameManager:
 
         if self.feedback_final_gerado is None: self.feedback_final_gerado = self.gerar_texto_analise()
         
-        caixa_img = self.imagens.get('caixa_dialogo')
-        if caixa_img:
-            caixa_rect = caixa_img.get_rect(center=(LARGURA_TELA / 2, ALTURA_TELA / 2))
-            surface.blit(caixa_img, caixa_rect)
-        else: # Fallback rectangle if image is missing
-            caixa_rect = pygame.Rect(100, 50, LARGURA_TELA - 200, ALTURA_TELA - 100)
-            pygame.draw.rect(surface, CORES["CINZA"], caixa_rect, border_radius=10)
+        # Desenha a caixa com código
+        caixa_rect = pygame.Rect(100, 50, LARGURA_TELA - 200, ALTURA_TELA - 100)
+        pygame.draw.rect(surface, CORES["CINZA"], caixa_rect, border_radius=10)
 
 
         titulo_surf = FONTES["TITULO"].render("Relatório Final", True, CORES["BRANCO"])
@@ -648,7 +799,7 @@ class GameManager:
                  y_texto += 110 # Adjust spacing
 
 
-        self.botao_sair.desenhar(surface, pos_mouse_hover)
+        self.botao_sair.desenhar(surface, pos_mouse_hover) # Passa o hover
 
     def terminar_jogo(self, resultado):
         self.resultado_final = resultado
@@ -758,8 +909,8 @@ class GameManager:
                 self.evento_atual = self.banco_eventos[evento_idx]
                 self.id_evento_do_dia = self.evento_atual.id_evento # Store the ID
                 
-                # Create buttons for the event screen
-                self.botoes_evento = [Botao(0, 0, LARGURA_TELA-300, 70, o.texto_resposta) for i, o in enumerate(self.evento_atual.opcoes)] # Adjusted size
+                # MUDANÇA: Chama a nova função para criar os botões no layout de grid
+                self.criar_botoes_evento() 
                 self.estado_jogo = "TELA_EVENTO"
             else:
                  print("AVISO: Banco de eventos vazio!")
@@ -778,6 +929,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT: pygame.quit(); sys.exit()
             game_manager.processar_input(event)
+        
         game_manager.desenhar(tela); pygame.display.flip(); clock.tick(60)
 
 if __name__ == '__main__':
